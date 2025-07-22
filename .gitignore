@@ -2,3 +2,14 @@
 /node_modules
 env
 .env
+.DS_Store
+package-lock.json
+yarn-error.log
+npm-debug.log
+dist
+build
+coverage
+.vscode
+.idea
+*.log
+*.tmp
