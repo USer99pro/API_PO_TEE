@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 });
 
 //Conect Mongodb none .env
-mongoose.connection('<<Mongodb URL>>/<< atabase Name >>').then(() => {
+mongoose.connection('<< Mongodb URL >>/<< database Name >>').then(() => {
     console.log("✅ Connected to MongoDB");
   }).catch((err) => {
     console.error("❌ Failed to connect MongoDB:", err.message);
