@@ -1,6 +1,10 @@
 # API PO TEE Students
 
+### install Package
+```
+npm install bcrypt dotenv mongoose nodemon
 
+```
 
 ## Run Locally
 
