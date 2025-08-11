@@ -32,6 +32,14 @@ mongoose
 //     console.error("❌ Failed to connect MongoDB:", err.message);
 //   });
 
+//Conect Mongodb none .env
+mongoose.connection('<< Mongodb URL >>/<< database Name >>').then(() => {
+    console.log("✅ Connected to MongoDB");
+  }).catch((err) => {
+    console.error("❌ Failed to connect MongoDB:", err.message);
+});
+  
+
 // Middleware
 app.use(logger("dev"));
 app.use(express.json());
