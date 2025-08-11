@@ -98,7 +98,7 @@ exports.deleteStudent = async (req, res, next) => {
         const result = await Student.deleteOne({ _id: id });
 
         if (result.deletedCount === 0) {
-            throw new Error("ไม่สามารถลบข้อมูลได้");
+            throw new Error(`ไม่สามารถลบข้อมูลของไอดี ${id}`);
         }
 
         console.log("✅ ลบข้อมูลนักเรียนเรียบร้อย");

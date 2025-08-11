@@ -26,11 +26,11 @@ mongoose
   });
 
 
-  mongoose.connection('<<Mongodb URL>>/<< Database Name >>').then(() => {
-    console.log("✅ Connected to MongoDB");
-  }).catch((err) => {
-    console.error("❌ Failed to connect MongoDB:", err.message);
-  }
+//   mongoose.connection('<<Mongodb URL>>/<< atabase Name >>').then(() => {
+//     console.log("✅ Connected to MongoDB");
+//   }).catch((err) => {
+//     console.error("❌ Failed to connect MongoDB:", err.message);
+//   });
 
 // Middleware
 app.use(logger("dev"));
@@ -43,5 +43,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/students", studentRouter);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 module.exports = app;
