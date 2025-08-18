@@ -1,15 +1,30 @@
-./node_modules
-/node_modules
-env
+# Node modules
+node_modules/
+./node_modules/
+
+# Environment files
 .env
+env
+
+# System files
 .DS_Store
+
+# Lock files
 package-lock.json
 yarn-error.log
 npm-debug.log
-dist
-build
-coverage
-.vscode
-.idea
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# IDE & Editor folders
+.vscode/
+.idea/
+
+# Logs & temp
 *.log
 *.tmp
+*.temp
+
