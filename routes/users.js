@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router(); // ✅ This was missing
+const router = express.Router(); 
 const usercontroller = require("../controller/userController");
 
-/* GET users listing. */
-router.post('/register', usercontroller.registerUser); 
+
+// 127.0.0.1:3000/users/
+router.post('/register', usercontroller.register); 
+router.post('/login', usercontroller.login);
 
 module.exports = router;

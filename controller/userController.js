@@ -1,71 +1,93 @@
 const User = require("../models/userModel");
+const jwt = require('jsonwebtoken');
 
-exports.registerUser = async (req, res, next) => {
-  try {
-    console.log("📥 Incoming request body:", req.body);
-
-    let { username, email, password, image, role } = req.body;
-
-    console.log("📝 Before trim:", { username, email, password, image, role });
-
-    // Trim ค่าที่รับมา
-    username = typeof username === "string" ? username.trim() : username;
-    email = typeof email === "string" ? email.trim() : email;
-
-    console.log("✂️ After trim:", { username, email, password });
-
-    // Validate required fields
-    if (!username || !email || !password) {
-      console.warn("⚠️ Missing required fields");
-      return res.status(400).json({
-        message: "Please provide username, email, and password"
-      });
-    }
-
-    // Validate data types
-    if (typeof email !== "string" || typeof username !== "string" || typeof password !== "string") {
-      console.warn("⚠️ Invalid input format");
-      return res.status(400).json({ message: "Invalid input format" });
-    }
-
-    // Check if email exists
-    const existingEmail = await User.findOne({ email });
-    console.log("🔍 Existing email search result:", existingEmail);
-
-    if (existingEmail) {
-      console.warn("⚠️ Email already exists");
-      return res.status(400).json({ message: "Email already exists" });
-    }
-
-    // Create new user
-    const newUser = new User({ username, email, image, role });
-    console.log("🆕 New user object (before save):", newUser);
-
-    // Encrypt password
-    newUser.password = await newUser.encryptPassword(password);
-
-    // Save user
-    await newUser.save();
-    console.log("✅ ผู้ใช้ถูกบันทึก:", newUser);
-
-    // ส่ง status 201 เมื่อสร้างสำเร็จ
-    return res.status(201).json({
-      message: "User registered successfully",
-      user: {
-        id: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        role: newUser.role,
-        image: newUser.image,
-        createdAt: newUser.createdAt
-      }
-    });
-
-  } catch (error) {
-    console.error("❌ Error registering user:", error);
-    return res.status(500).json({
-      message: "Error registering user",
-      error: error.message
-    });
-  }
+const generateToken = (userId) => {
+  return jwt.sign(
+    { userID: userId },process.env.JWT_SECRET,   // ✅ ดึงจาก .env
+    { expiresIn: "3d" }
+  );
 };
+
+
+exports.register = async(req,res,next) => {
+    try {
+        const { username ,email,password} = req.body;
+        console.log(username,email,password);
+        // const exitsEmail = await User.findOne({email:email});
+        // if(exitsEmail){
+        //    const err = new Error();
+        //    throw err ;
+        // }
+        const user = new User({
+           username:username ,
+           email:email,
+        })
+        user.password = await user.encryptPassword(password)
+        console.log(password);
+        await user.save();
+
+        const token = generateToken(user._id);
+
+        res.json({
+           message:"ลงทะเบียนเรียบร้อย" ,
+           user: {
+              id:user._id,
+              username: user.username,
+              email: user.email,
+              role: user.role
+           } ,
+           token: token,
+           expiresIn: '3d'
+        })
+    } catch (error) {
+         res.json({
+            message:" อีเมลนี้ถูกใช้แล้ว" 
+         })
+    }
+}
+
+exports.login = async(req,res,next)=> {
+    try {
+         const { email , password} = req.body
+         console.log("พยายาม Login:" ,email );
+         const user = await User.findOne({email: email }).select('+isDeleted');
+         console.log(user.isDeleted);
+         if(!user){
+            return res.json({
+               message: " email  ไม่ถูกต้อง"
+            })
+         }
+         if (user.isDeleted){
+            return res.json({
+               message: " บัญชีนี้ถูกระงับการใช้งาน ..."
+            })
+         }
+
+         const isValidPassword = await user.checkPassword(password);
+         if( !isValidPassword ){
+              return res.json({
+                 message: "password ไม่ถูกต้อง"
+              })
+         }
+
+         const token = generateToken(user._id);
+         res.json({
+            message: "เข้าสู่ระบบสำเร็จ",
+            user:{
+               id: user._id,
+               username:user.username,
+               email:user.email,
+               image:user.image,
+               role:user.role
+            } ,
+            token:token ,
+            expiresIn: '3d'
+         })
+
+    } catch (error) {
+       console.error("Login error:" , error.message);
+       res.json({
+         message: "เกิดข้อผิดพลาดในการเข้าสู้ระบบ"
+       })
+    }
+}

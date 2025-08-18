@@ -26,19 +26,14 @@ mongoose
   });
 
 
-//   mongoose.connection('<<Mongodb URL>>/<< atabase Name >>').then(() => {
+//Connect Mongodb none .env
+//   mongoose.connection('<<Mongodb URL>>/<< Collection Name>>').then(() => {
 //     console.log("✅ Connected to MongoDB");
 //   }).catch((err) => {
 //     console.error("❌ Failed to connect MongoDB:", err.message);
 //   });
 
-//Conect Mongodb none .env
-mongoose.connection('<< Mongodb URL >>/<< database Name >>').then(() => {
-    console.log("✅ Connected to MongoDB");
-  }).catch((err) => {
-    console.error("❌ Failed to connect MongoDB:", err.message);
-});
-  
+
 
 // Middleware
 app.use(logger("dev"));
