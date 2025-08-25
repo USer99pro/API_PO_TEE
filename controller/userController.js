@@ -9,6 +9,25 @@ const generateToken = (userId) => {
 };
 
 
+// get all users
+exports.getAllUsers = async (req, res, next) => {
+   try {
+      const users = await User.find().select('-password -__v');
+      res.json(
+         {
+            message: "ดึงข้อมูลผู้ใช้ทั้งหมดสำเร็จ",
+            users: users,
+            count: users.length
+         });
+   } catch (error) {
+      console.log("Get all users error:", error.message);
+      res.status(500).json({
+         message: "เกิดข้อผิดพลาดในการดึงข้อมูลผู้ใช้",
+         error: error.message
+   })
+   }
+}
+
 exports.register = async(req,res,next) => {
     try {
         const { username ,email,password} = req.body;
