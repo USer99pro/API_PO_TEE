@@ -7,7 +7,7 @@ const Schema = new mongoose.Schema(
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true, trim: true, minlength: 6 },
     image: { type: String, default: "default.jpg" },
-    role: { type: String, default: "member" },
+    role: { type: String,enum:["USER","ADMIN"], default: "USER"},
     cloudinaryID: { type: String, default: null },
     isDeleted: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
